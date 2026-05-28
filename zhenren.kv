@@ -1,0 +1,328 @@
+#:kivy 2.3
+
+# COLOR_BG   = 0.07, 0.05, 0.02, 1 褐底
+# COLOR_GOLD = 0.82, 0.63, 0.25, 1 古铜金
+# COLOR_RED  = 0.75, 0.18, 0.12, 1 朱砂红
+# COLOR_CREAM= 0.93, 0.90, 0.82, 1 骨白
+
+
+<HomeScreen>:
+    name: "home"
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.07, 0.05, 0.02, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            size_hint_y: 0.25
+            orientation: "vertical"
+            padding: 0, 30, 0, 0
+            Label:
+                text: "贞 人 占 卜"
+                font_size: "36sp"
+                bold: True
+                color: 0.82, 0.63, 0.25, 1
+            Label:
+                text: "以商周之力 · 问天地之心"
+                font_size: "14sp"
+                color: 0.75, 0.18, 0.12, 1
+        BoxLayout:
+            size_hint_y: 0.45
+            orientation: "vertical"
+            padding: 40, 10, 40, 10
+            spacing: 15
+            Label:
+                text: "请写下你的祈问事项："
+                font_size: "16sp"
+                color: 0.93, 0.90, 0.82, 1
+                size_hint_y: None
+                height: 30
+            TextInput:
+                id: question_input
+                hint_text: "所求何事？所忧何物？"
+                hint_text_color: 0.4, 0.35, 0.25, 1
+                foreground_color: 0.93, 0.90, 0.82, 1
+                background_color: 0.12, 0.08, 0.04, 0.8
+                font_size: "16sp"
+                multiline: True
+                padding: 15, 15
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: "vertical"
+            padding: 40, 20, 40, 40
+            spacing: 12
+            Button:
+                text: "开 始 占 卜"
+                font_size: "20sp"
+                bold: True
+                color: 0.12, 0.08, 0.04, 1
+                background_normal: ""
+                background_color: 0.82, 0.63, 0.25, 1
+                size_hint_y: None
+                height: 56
+                on_release:
+                    root.do_divination(question_input.text)
+            Button:
+                text: "查看历史卜辞"
+                font_size: "14sp"
+                color: 0.82, 0.63, 0.25, 1
+                background_normal: ""
+                background_color: 0.12, 0.08, 0.04, 0.6
+                size_hint_y: None
+                height: 44
+                on_release:
+                    app.root.current = "history"
+
+
+<CeremonyScreen>:
+    name: "ceremony"
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.07, 0.05, 0.02, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        canvas:
+            Color:
+                rgba: 0.95, 0.42, 0.08, 0.7
+            Rectangle:
+                pos: self.center_x - 60, self.y + 60
+                size: 120, 30
+            Color:
+                rgba: 0.95, 0.55, 0.12, 0.5
+            Rectangle:
+                pos: self.center_x - 40, self.y + 90
+                size: 80, 20
+        Label:
+            text: "灼 兆 中 ..."
+            font_size: "28sp"
+            bold: True
+            color: 0.82, 0.63, 0.25, 1
+        Label:
+            text: "龟甲在烈火中显兆\n天地正在回应你的祈问"
+            font_size: "14sp"
+            color: 0.75, 0.18, 0.12, 1
+
+
+<ResultScreen>:
+    name: "result"
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.07, 0.05, 0.02, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            padding: 15, 10
+            Label:
+                text: "卜 辞"
+                font_size: "24sp"
+                bold: True
+                color: 0.82, 0.63, 0.25, 1
+        ScrollView:
+            BoxLayout:
+                orientation: "vertical"
+                padding: 20, 10, 20, 20
+                spacing: 15
+                size_hint_y: None
+                height: self.minimum_height
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: max(80, crack_label.texture_size[1] + 60)
+                    canvas.before:
+                        Color:
+                            rgba: 0.12, 0.08, 0.04, 0.6
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    Label:
+                        text: "  — 龟甲兆纹 —"
+                        font_size: "12sp"
+                        color: 0.75, 0.18, 0.12, 1
+                        size_hint_y: None
+                        height: 24
+                    Label:
+                        id: crack_label
+                        text: ""
+                        font_size: "15sp"
+                        color: 0.93, 0.90, 0.82, 1
+                        padding: 15, 5
+                        text_size: self.width - 30, None
+                        size_hint_y: None
+                        height: self.texture_size[1] + 20
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: max(70, oracle_label.texture_size[1] + 50)
+                    canvas.before:
+                        Color:
+                            rgba: 0.12, 0.08, 0.04, 0.6
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    Label:
+                        text: "  — 卦  辞 —"
+                        font_size: "12sp"
+                        color: 0.75, 0.18, 0.12, 1
+                        size_hint_y: None
+                        height: 24
+                    Label:
+                        id: oracle_label
+                        text: ""
+                        font_size: "20sp"
+                        bold: True
+                        color: 0.82, 0.63, 0.25, 1
+                        padding: 15, 5
+                        text_size: self.width - 30, None
+                        size_hint_y: None
+                        height: self.texture_size[1] + 20
+                BoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: max(100, explain_label.texture_size[1] + 50)
+                    canvas.before:
+                        Color:
+                            rgba: 0.12, 0.08, 0.04, 0.6
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    Label:
+                        text: "  — 解  读 —"
+                        font_size: "12sp"
+                        color: 0.75, 0.18, 0.12, 1
+                        size_hint_y: None
+                        height: 24
+                    Label:
+                        id: explain_label
+                        text: ""
+                        font_size: "15sp"
+                        color: 0.93, 0.90, 0.82, 1
+                        padding: 15, 5
+                        text_size: self.width - 30, None
+                        size_hint_y: None
+                        height: self.texture_size[1] + 20
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            padding: 20, 8
+            spacing: 12
+            Button:
+                text: "再问一事"
+                font_size: "15sp"
+                color: 0.12, 0.08, 0.04, 1
+                background_normal: ""
+                background_color: 0.82, 0.63, 0.25, 1
+                on_release: root.go_home()
+            Button:
+                text: "历史记录"
+                font_size: "15sp"
+                color: 0.82, 0.63, 0.25, 1
+                background_normal: ""
+                background_color: 0.12, 0.08, 0.04, 0.6
+                on_release: root.go_history()
+
+
+<HistoryScreen>:
+    name: "history"
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.07, 0.05, 0.02, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            padding: 15, 10
+            Label:
+                text: "历 史 卜 辞"
+                font_size: "22sp"
+                bold: True
+                color: 0.82, 0.63, 0.25, 1
+        RecycleView:
+            id: history_list
+            viewclass: "HistoryItem"
+            RecycleBoxLayout:
+                orientation: "vertical"
+                padding: 15, 5
+                spacing: 8
+                size_hint_y: None
+                height: self.minimum_height
+                default_size_hint: 1, None
+                default_size: 0, 90
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            padding: 20, 8
+            Button:
+                text: "返回首页"
+                font_size: "15sp"
+                color: 0.82, 0.63, 0.25, 1
+                background_normal: ""
+                background_color: 0.12, 0.08, 0.04, 0.6
+                on_release:
+                    app.root.current = "home"
+
+
+<HistoryItem@BoxLayout>:
+    question: ""
+    oracle: ""
+    time: ""
+    record_id: ""
+    orientation: "vertical"
+    size_hint_y: None
+    height: 90
+    canvas.before:
+        Color:
+            rgba: 0.12, 0.08, 0.04, 0.6
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        size_hint_y: None
+        height: 24
+        padding: 12, 4
+        Label:
+            text: root.time
+            font_size: "11sp"
+            color: 0.5, 0.45, 0.35, 1
+            size_hint_x: 0.7
+        Button:
+            text: "删除"
+            font_size: "11sp"
+            color: 0.75, 0.18, 0.12, 1
+            background_normal: ""
+            background_color: 0, 0, 0, 0
+            size_hint_x: 0.3
+            on_release:
+                app.root.get_screen("history").delete_record(root.record_id)
+    Label:
+        text: root.question
+        font_size: "13sp"
+        color: 0.93, 0.90, 0.82, 1
+        padding: 12, 0
+        text_size: self.width - 24, None
+        size_hint_y: None
+        height: 22
+        shorten: True
+    Label:
+        text: root.oracle
+        font_size: "14sp"
+        bold: True
+        color: 0.82, 0.63, 0.25, 1
+        padding: 12, 0
+        text_size: self.width - 24, None
+        size_hint_y: None
+        height: 24
