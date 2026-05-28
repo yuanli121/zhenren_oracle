@@ -60,64 +60,6 @@ COLOR_DARK = (0.12, 0.08, 0.04, 1)      # 深木色
 COLOR_FIRE = (0.95, 0.42, 0.08, 1)      # 火焰橙
 
 
-class SplashScreen(Screen):
-    """开机动画 — 大文件自动跳过，避免卡死"""
-
-    def on_enter(self):
-        Clock.schedule_once(self._start_splash, 0.5)
-
-    def _start_splash(self, dt):
-        video_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "splash_anim.mp4")
-        try:
-            size_mb = os.path.getsize(video_path) / (1024 * 1024)
-        except Exception:
-            self._skip()
-            return
-        # 大于 50MB 直接跳过
-        if size_mb > 50:
-            self._skip()
-            return
-        from kivy.uix.video import Video as V
-        video = None
-        for child in self.children:
-            if isinstance(child, V):
-                video = child
-                break
-        if video is None:
-            self._skip()
-            return
-        try:
-            video.source = video_path
-            video.state = "play"
-            video.bind(eos=self._on_video_end)
-        except Exception:
-            self._skip()
-            return
-        # 4 秒超时兜底
-        Clock.schedule_once(self._go_home, 4)
-
-    def _on_video_end(self, instance, value):
-        if value:
-            Clock.unschedule(self._go_home)
-            self.manager.current = "home"
-
-    def _go_home(self, dt):
-        if self.manager.current == "splash":
-            self.manager.current = "home"
-
-    def _skip(self):
-        self.manager.current = "home"
-
-    def on_leave(self):
-        Clock.unschedule(self._go_home)
-        from kivy.uix.video import Video as V
-        for child in self.children:
-            if isinstance(child, V):
-                child.unbind(eos=self._on_video_end)
-                child.state = "stop"
-                break
-
-
 class HomeScreen(Screen):
     """首页 — 输入祈问事项"""
 
@@ -276,7 +218,6 @@ class YaoYiYaoApp(App):
         self.current_question = ""
         self.current_result = None
         sm = ScreenManager(transition=SlideTransition(duration=0.4))
-        sm.add_widget(SplashScreen(name="splash"))
         sm.add_widget(HomeScreen(name="home"))
         sm.add_widget(CeremonyScreen(name="ceremony"))
         sm.add_widget(ResultScreen(name="result"))
