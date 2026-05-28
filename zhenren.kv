@@ -1,6 +1,5 @@
 #:kivy 2.3
 #:import PRICE oracle_engine.PRICE
-#:import Video kivy.uix.video.Video
 # ============================================================
 #  爻一摇 — 商周青铜风 · 视频占卜动画
 #  配色：玄黑底 / 古铜金 / 朱砂红 / 宣纸白 / 青铜绿
@@ -246,18 +245,31 @@
 
 <CeremonyScreen>:
     name: "ceremony"
-    Video:
-        id: ceremony_video
-        state: "stop"
-        options: "eos=stop"
-        allow_stretch: True
-        volume: 0
+    BoxLayout:
+        orientation: "vertical"
         canvas.before:
             Color:
                 rgba: 0.06, 0.04, 0.02, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
+        Widget:
+            size_hint_y: 0.35
+        Label:
+            text: "爻 一 摇"
+            font_size: "40sp"
+            bold: True
+            color: 0.84, 0.67, 0.30, 1
+            size_hint_y: None
+            height: 60
+        Label:
+            text: "天地正在聆听你的祈问..."
+            font_size: "14sp"
+            color: 0.75, 0.18, 0.12, 1
+            size_hint_y: None
+            height: 24
+        Widget:
+            size_hint_y: 1
 
 
 <ResultScreen>:

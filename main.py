@@ -79,52 +79,16 @@ class HomeScreen(Screen):
 
 
 class CeremonyScreen(Screen):
-    """灼兆仪式 — 视频动画，完整播放，短超时兜底"""
+    """灼兆仪式 — 过渡屏，直接跳结果"""
 
     def on_enter(self):
-        Clock.schedule_once(self._start_ceremony, 0.5)
-
-    def _start_ceremony(self, dt):
-        from kivy.uix.video import Video as V
-        video = None
-        for child in self.children:
-            if isinstance(child, V):
-                video = child
-                break
-        if video is None:
-            Clock.schedule_once(self._go_result, 2)
-            return
-        video_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "divination_anim.mp4")
-        if not os.path.exists(video_path):
-            Clock.schedule_once(self._go_result, 2)
-            return
-        try:
-            video.source = video_path
-            video.state = "play"
-            video.bind(eos=self._on_video_end)
-        except Exception:
-            Clock.schedule_once(self._go_result, 2)
-            return
-        # 5 秒超时兜底（视频应在这之前结束）
-        Clock.schedule_once(self._go_result, 5)
-
-    def _on_video_end(self, instance, value):
-        if value:
-            Clock.unschedule(self._go_result)
-            self.manager.current = "result"
+        Clock.schedule_once(self._go_result, 1.5)
 
     def on_leave(self):
         Clock.unschedule(self._go_result)
-        from kivy.uix.video import Video as V
-        for child in self.children:
-            if isinstance(child, V):
-                child.unbind(eos=self._on_video_end)
-                child.state = "stop"
-                break
 
     def _go_result(self, dt):
-        if self.manager.current == "ceremony":
-            self.manager.current = "result"
+        self.manager.current = "result"
 
 
 class PaywallScreen(Screen):
