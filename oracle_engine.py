@@ -6,9 +6,20 @@
   大吉 5%  |  吉 20%  |  贞吉 30%  |  无咎 25%  |  悔吝 15%  |  厉 5%
 """
 import os
+import hashlib
 import random
 import sqlite3
 from datetime import datetime
+
+# ---------- 激活码系统 ----------
+FREE_LIMIT = 3  # 免费试用次数
+# 预置激活码的 SHA256 哈希（发布时替换为正式码）
+_PREHASHED = [
+    "ZHENREN-PRO-2026",
+    "ZHENREN-VIP-FREE",
+    "ORACLE-UNLOCK-KEY",
+]
+VALID_HASHES = {hashlib.sha256(c.encode()).hexdigest() for c in _PREHASHED}
 
 
 # ---------- 吉凶等级 & 权重 ----------
@@ -490,6 +501,51 @@ class OracleEngine:
             cols = [row[1] for row in cur.fetchall()]
             if "auspice" not in cols:
                 conn.execute("ALTER TABLE history ADD COLUMN auspice TEXT NOT NULL DEFAULT '无咎'")
+            # 许可配置表
+            conn.execute(
+                """CREATE TABLE IF NOT EXISTS license (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL
+                )"""
+            )
+            conn.execute(
+                "INSERT OR IGNORE INTO license (key, value) VALUES ('usage_count', '0')"
+            )
+            conn.execute(
+                "INSERT OR IGNORE INTO license (key, value) VALUES ('activated', '0')"
+            )
+
+    # ---------- 许可方法 ----------
+    def _get_license(self, key: str) -> str:
+        with sqlite3.connect(self.db_path) as conn:
+            cur = conn.execute("SELECT value FROM license WHERE key = ?", (key,))
+            row = cur.fetchone()
+            return row[0] if row else "0"
+
+    def _set_license(self, key: str, value: str):
+        with sqlite3.connect(self.db_path) as conn:
+            conn.execute("UPDATE license SET value = ? WHERE key = ?", (value, key))
+
+    def get_usage_count(self) -> int:
+        return int(self._get_license("usage_count"))
+
+    def get_free_uses_left(self) -> int:
+        return max(0, FREE_LIMIT - self.get_usage_count())
+
+    def is_activated(self) -> bool:
+        return self._get_license("activated") == "1"
+
+    def increment_usage(self):
+        count = self.get_usage_count() + 1
+        self._set_license("usage_count", str(count))
+
+    def verify_code(self, code: str) -> bool:
+        """验证激活码"""
+        code_hash = hashlib.sha256(code.strip().upper().encode()).hexdigest()
+        if code_hash in VALID_HASHES:
+            self._set_license("activated", "1")
+            return True
+        return False
 
     def _extract_concern(self, question: str) -> str:
         """从问题中提取核心关切，用于个性化前缀"""

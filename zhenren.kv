@@ -542,6 +542,119 @@
                 on_release: root.go_history()
 
 
+
+<PaywallScreen>:
+    name: "paywall"
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 0.06, 0.04, 0.02, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        # 标题
+        BoxLayout:
+            size_hint_y: None
+            height: 48
+            padding: 14, 6
+            canvas.before:
+                Color:
+                    rgba: 0.10, 0.07, 0.04, 0.6
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                text: "解 锁 权 限"
+                font_size: "20sp"
+                bold: True
+                color: 0.84, 0.67, 0.30, 1
+        DecorTop:
+        # 内容
+        BoxLayout:
+            size_hint_y: 1
+            orientation: "vertical"
+            padding: 30, 20
+            spacing: 14
+            Label:
+                id: paywall_status
+                text: ""
+                font_size: "12sp"
+                color: 0.50, 0.42, 0.30, 1
+                size_hint_y: None
+                height: 22
+            Label:
+                text: "免费试用次数已用完"
+                font_size: "22sp"
+                bold: True
+                color: 0.84, 0.67, 0.30, 1
+                size_hint_y: None
+                height: 36
+            Label:
+                text: "请输入激活码以解锁无限占卜"
+                font_size: "14sp"
+                color: 0.88, 0.84, 0.74, 1
+                size_hint_y: None
+                height: 24
+            TextInput:
+                id: activation_input
+                hint_text: "请输入激活码"
+                hint_text_color: 0.30, 0.26, 0.20, 1
+                foreground_color: 0.93, 0.89, 0.78, 1
+                background_color: 0.08, 0.06, 0.03, 0.9
+                cursor_color: 0.84, 0.67, 0.30, 1
+                font_size: "16sp"
+                multiline: False
+                size_hint_y: None
+                height: 48
+                padding: 12, 12
+                canvas.before:
+                    Color:
+                        rgba: 0.82, 0.63, 0.25, 0.2
+                    Line:
+                        rectangle: self.x + 2, self.y + 2, self.width - 4, self.height - 4
+                        width: 1.2
+            Label:
+                id: paywall_msg
+                text: ""
+                font_size: "13sp"
+                color: 0.50, 0.42, 0.30, 1
+                size_hint_y: None
+                height: 40
+            Button:
+                text: "验 证 激 活"
+                font_size: "16sp"
+                bold: True
+                color: 0.08, 0.05, 0.02, 1
+                background_normal: ""
+                background_color: 0.84, 0.67, 0.30, 1
+                size_hint_y: None
+                height: 48
+                canvas.before:
+                    Color:
+                        rgba: 0.72, 0.55, 0.22, 1
+                    Line:
+                        rectangle: self.x + 2, self.y + 2, self.width - 4, self.height - 4
+                        width: 1.5
+                on_release: root.try_activate(activation_input.text)
+            Button:
+                text: "返 回 首 页"
+                font_size: "14sp"
+                color: 0.84, 0.67, 0.30, 1
+                background_normal: ""
+                background_color: 0.10, 0.08, 0.04, 0.8
+                size_hint_y: None
+                height: 44
+                on_release: root.go_home()
+            Label:
+                text: "如需购买激活码，请联系开发者"
+                font_size: "11sp"
+                color: 0.35, 0.30, 0.22, 1
+                size_hint_y: None
+                height: 20
+        DecorTop:
+
+
 <HistoryScreen>:
     name: "history"
     BoxLayout:

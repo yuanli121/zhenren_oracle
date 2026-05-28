@@ -68,8 +68,13 @@ class HomeScreen(Screen):
         if not question:
             return
         app = App.get_running_app()
+        # 检查免费次数 / 激活状态
+        if not app.oracle.is_activated() and app.oracle.get_free_uses_left() <= 0:
+            self.manager.current = "paywall"
+            return
         app.current_question = question
         app.current_result = app.oracle.divine(question)
+        app.oracle.increment_usage()
         self.manager.current = "ceremony"
 
 
@@ -85,6 +90,31 @@ class CeremonyScreen(Screen):
 
     def _go_result(self, dt):
         self.manager.current = "result"
+
+
+class PaywallScreen(Screen):
+    """付费解锁 — 试用次数用完"""
+
+    def on_pre_enter(self):
+        app = App.get_running_app()
+        left = app.oracle.get_free_uses_left()
+        activated = app.oracle.is_activated()
+        self.ids.paywall_status.text = (
+            "已激活 · 无限使用" if activated else f"免费试用：剩余 {left} 次"
+        )
+
+    def try_activate(self, code):
+        app = App.get_running_app()
+        if app.oracle.verify_code(code):
+            self.ids.paywall_msg.text = "激活成功！\n感谢支持，现在可以无限占卜了。"
+            self.ids.paywall_msg.color = (0.84, 0.67, 0.30, 1)
+            self.ids.paywall_status.text = "已激活 · 无限使用"
+        else:
+            self.ids.paywall_msg.text = "激活码无效，请检查后重试。\n如需购买请联系开发者。"
+            self.ids.paywall_msg.color = (0.75, 0.18, 0.12, 1)
+
+    def go_home(self):
+        self.manager.current = "home"
 
 
 class ResultScreen(Screen):
@@ -157,6 +187,7 @@ class ZhenRenApp(App):
         sm.add_widget(CeremonyScreen(name="ceremony"))
         sm.add_widget(ResultScreen(name="result"))
         sm.add_widget(HistoryScreen(name="history"))
+        sm.add_widget(PaywallScreen(name="paywall"))
         return sm
 
     def get_application_name(self):
