@@ -60,6 +60,49 @@ COLOR_DARK = (0.12, 0.08, 0.04, 1)      # 深木色
 COLOR_FIRE = (0.95, 0.42, 0.08, 1)      # 火焰橙
 
 
+class SplashScreen(Screen):
+    """开机动画 — 启动时完整播放"""
+
+    def on_enter(self):
+        Clock.schedule_once(self._start_splash, 0.3)
+
+    def _start_splash(self, dt):
+        from kivy.uix.video import Video as V
+        video = None
+        for child in self.children:
+            if isinstance(child, V):
+                video = child
+                break
+        if video is None:
+            self.manager.current = "home"
+            return
+        video_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "splash_anim.mp4")
+        if os.path.exists(video_path):
+            video.source = video_path
+            video.state = "play"
+            video.bind(eos=self._on_video_end)
+            Clock.schedule_once(self._go_home, 30)
+        else:
+            self.manager.current = "home"
+
+    def _on_video_end(self, instance, value):
+        if value:
+            self.manager.current = "home"
+
+    def _go_home(self, dt):
+        if self.manager.current == "splash":
+            self.manager.current = "home"
+
+    def on_leave(self):
+        Clock.unschedule(self._go_home)
+        from kivy.uix.video import Video as V
+        for child in self.children:
+            if isinstance(child, V):
+                child.unbind(eos=self._on_video_end)
+                child.state = "stop"
+                break
+
+
 class HomeScreen(Screen):
     """首页 — 输入祈问事项"""
 
@@ -79,22 +122,41 @@ class HomeScreen(Screen):
 
 
 class CeremonyScreen(Screen):
-    """灼兆仪式 — 视频动画过渡屏"""
+    """灼兆仪式 — 视频动画过渡屏，完整播放"""
 
     def on_enter(self):
-        # 播放视频，结束或6秒后跳转结果页
-        video = self.ids.ceremony_video
+        Clock.schedule_once(self._start_ceremony, 0.3)
+
+    def _start_ceremony(self, dt):
+        from kivy.uix.video import Video as V
+        video = None
+        for child in self.children:
+            if isinstance(child, V):
+                video = child
+                break
+        if video is None:
+            Clock.schedule_once(self._go_result, 6)
+            return
         video_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "divination_anim.mp4")
         if os.path.exists(video_path):
             video.source = video_path
             video.state = "play"
-        # 备用：6秒后无论如何跳转
-        Clock.schedule_once(self._go_result, 6)
+            video.bind(eos=self._on_video_end)
+        else:
+            Clock.schedule_once(self._go_result, 6)
+
+    def _on_video_end(self, instance, value):
+        if value:
+            self.manager.current = "result"
 
     def on_leave(self):
         Clock.unschedule(self._go_result)
-        video = self.ids.ceremony_video
-        video.state = "stop"
+        from kivy.uix.video import Video as V
+        for child in self.children:
+            if isinstance(child, V):
+                child.unbind(eos=self._on_video_end)
+                child.state = "stop"
+                break
 
     def _go_result(self, dt):
         self.manager.current = "result"
@@ -191,6 +253,7 @@ class YaoYiYaoApp(App):
         self.current_question = ""
         self.current_result = None
         sm = ScreenManager(transition=SlideTransition(duration=0.4))
+        sm.add_widget(SplashScreen(name="splash"))
         sm.add_widget(HomeScreen(name="home"))
         sm.add_widget(CeremonyScreen(name="ceremony"))
         sm.add_widget(ResultScreen(name="result"))
