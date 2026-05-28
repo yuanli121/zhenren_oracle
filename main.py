@@ -97,15 +97,18 @@ class ResultScreen(Screen):
             self.ids.crack_label.text = r["crack_pattern"]
             self.ids.oracle_label.text = r["oracle_text"]
             self.ids.explain_label.text = r["explanation"]
-            self.ids.rarity_label.text = f'  {r.get("rarity", "常见")}  '
-            # 稀有度配色
-            rarity = r.get("rarity", "常见")
-            if rarity == "传说":
-                self.ids.rarity_label.color = (0.95, 0.42, 0.08, 1)     # 火焰橙
-            elif rarity == "稀有":
-                self.ids.rarity_label.color = (0.84, 0.67, 0.30, 1)     # 古铜金
-            else:
-                self.ids.rarity_label.color = (0.60, 0.55, 0.40, 1)     # 暗铜
+            self.ids.auspice_label.text = r.get("auspice_label", "无咎 · 安常")
+            # 吉凶配色
+            auspice = r.get("auspice", "无咎")
+            auspice_colors = {
+                "大吉": (0.95, 0.55, 0.10, 1),
+                "吉": (0.84, 0.67, 0.30, 1),
+                "贞吉": (0.72, 0.60, 0.32, 1),
+                "无咎": (0.60, 0.52, 0.38, 1),
+                "悔吝": (0.55, 0.45, 0.32, 1),
+                "厉": (0.75, 0.18, 0.12, 1),
+            }
+            self.ids.auspice_label.color = auspice_colors.get(auspice, (0.6, 0.52, 0.38, 1))
 
     def go_home(self):
         self.manager.current = "home"
@@ -126,7 +129,7 @@ class HistoryScreen(Screen):
                 "question": rec[1],
                 "oracle": rec[3],
                 "time": rec[6],
-                "rarity": rec[5],
+                "auspice": rec[5],
                 "record_id": str(rec[0]),
             }
             for rec in records
