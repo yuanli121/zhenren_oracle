@@ -1,7 +1,7 @@
 [app]
 
-title = 贞人占卜
-package.name = zhenren_oracle
+title = 贞人占卜·免费版
+package.name = zhenren_oracle_free
 package.domain = com.zhenren
 source.dir = .
 source.include_exts = py,kv,png,jpg,ttf,db

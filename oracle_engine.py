@@ -12,7 +12,7 @@ import sqlite3
 from datetime import datetime
 
 # ---------- 激活码系统 ----------
-FREE_LIMIT = 3  # 免费试用次数
+FREE_LIMIT = 999999  # 免费版不限次数
 # 预置激活码的 SHA256 哈希（发布时替换为正式码）
 _PREHASHED = [
     "ZHENREN-PRO-2026",
