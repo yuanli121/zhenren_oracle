@@ -12,7 +12,7 @@ import string
 import sys
 
 # 必须与 oracle_engine.py 中的 _SECRET 和 _DIFFICULTY 一致
-SECRET = "ZhenRenOracle2026@Secret#Key!"
+SECRET = "YaoYiYao2026@Secret#Key!"
 DIFFICULTY = 4
 
 
@@ -45,7 +45,7 @@ def main():
         print(f"备注: {note}")
     print(f"\n发给用户时复制以下内容：")
     print("-" * 30)
-    print("贞人占卜 · 激活码\n")
+    print("爻一摇 · 激活码\n")
     for c in codes:
         print(f"  {c}")
     print(f"\n使用方法：打开App → 输入激活码 → 永久解锁")

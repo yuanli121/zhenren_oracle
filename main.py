@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-贞人占卜 — 商周龟甲灼兆卜辞应用
+爻一摇 — 商周龟甲灼兆卜辞应用
 """
 import os
 import sys
@@ -79,14 +79,22 @@ class HomeScreen(Screen):
 
 
 class CeremonyScreen(Screen):
-    """灼兆仪式 — 动画过渡屏"""
+    """灼兆仪式 — 视频动画过渡屏"""
 
     def on_enter(self):
-        # 3.5 秒后跳转到结果页
-        Clock.schedule_once(self._go_result, 3.5)
+        # 播放视频，结束或6秒后跳转结果页
+        video = self.ids.ceremony_video
+        video_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "divination_anim.mp4")
+        if os.path.exists(video_path):
+            video.source = video_path
+            video.state = "play"
+        # 备用：6秒后无论如何跳转
+        Clock.schedule_once(self._go_result, 6)
 
     def on_leave(self):
         Clock.unschedule(self._go_result)
+        video = self.ids.ceremony_video
+        video.state = "stop"
 
     def _go_result(self, dt):
         self.manager.current = "result"
@@ -171,10 +179,10 @@ class HistoryScreen(Screen):
         app.root.current = "history"
 
 
-class ZhenRenApp(App):
-    """贞人占卜 主应用"""
+class YaoYiYaoApp(App):
+    """爻一摇 主应用"""
 
-    title = "贞人占卜"
+    title = "爻一摇"
 
     def build(self):
         self.icon = ""
@@ -191,8 +199,8 @@ class ZhenRenApp(App):
         return sm
 
     def get_application_name(self):
-        return "贞人占卜"
+        return "爻一摇"
 
 
 if __name__ == "__main__":
-    ZhenRenApp().run()
+    YaoYiYaoApp().run()

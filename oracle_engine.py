@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-贞人占卜 — 核心占卜引擎
+爻一摇 — 核心占卜引擎
 纯本地规则，离线可用
 六级吉凶分布（基于《易经》64卦统计规律）：
   大吉 5%  |  吉 20%  |  贞吉 30%  |  无咎 25%  |  悔吝 15%  |  厉 5%
@@ -15,7 +15,7 @@ from datetime import datetime
 FREE_LIMIT = 999999  # 免费版不限次数
 PRICE = "0"          # 免费版价格
 # 签名验证：SHA256(激活码+密钥) 前缀为 DIFFICULTY 个0即有效
-_SECRET = "ZhenRenOracle2026@Secret#Key!"
+_SECRET = "YaoYiYao2026@Secret#Key!"
 _DIFFICULTY = 4
 
 def check_activation_code(code: str) -> bool:
@@ -476,7 +476,7 @@ def _pick_tiered(templates, category):
 
 # ---------- 占卜引擎 ----------
 class OracleEngine:
-    """贞人占卜引擎 — 六级吉凶加权分布"""
+    """爻一摇引擎 — 六级吉凶加权分布"""
 
     def __init__(self, db_path=None):
         if db_path is None:
