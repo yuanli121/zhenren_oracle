@@ -12,14 +12,16 @@ import sqlite3
 from datetime import datetime
 
 # ---------- 激活码系统 ----------
-FREE_LIMIT = 3  # 免费试用次数
-# 预置激活码的 SHA256 哈希（发布时替换为正式码）
-_PREHASHED = [
-    "ZHENREN-PRO-2026",
-    "ZHENREN-VIP-FREE",
-    "ORACLE-UNLOCK-KEY",
-]
-VALID_HASHES = {hashlib.sha256(c.encode()).hexdigest() for c in _PREHASHED}
+FREE_LIMIT = 3       # 免费试用次数
+PRICE = "18.88"      # 价格（元），修改此行即可调价
+# 签名验证：SHA256(激活码+密钥) 前缀为 DIFFICULTY 个0即有效
+_SECRET = "ZhenRenOracle2026@Secret#Key!"
+_DIFFICULTY = 4
+
+def check_activation_code(code: str) -> bool:
+    """验证激活码签名"""
+    raw = (code.strip().upper() + _SECRET).encode()
+    return hashlib.sha256(raw).hexdigest().startswith("0" * _DIFFICULTY)
 
 
 # ---------- 吉凶等级 & 权重 ----------
@@ -540,9 +542,8 @@ class OracleEngine:
         self._set_license("usage_count", str(count))
 
     def verify_code(self, code: str) -> bool:
-        """验证激活码"""
-        code_hash = hashlib.sha256(code.strip().upper().encode()).hexdigest()
-        if code_hash in VALID_HASHES:
+        """签名验证激活码"""
+        if check_activation_code(code):
             self._set_license("activated", "1")
             return True
         return False
