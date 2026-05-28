@@ -56,12 +56,69 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-            # 背景暗纹 — 青铜器锈色渐变
+            # 中央青铜锈色光晕
             Color:
-                rgba: 0.09, 0.07, 0.04, 0.5
-            Rectangle:
-                pos: self.center_x - 80, self.y
-                size: 160, self.height
+                rgba: 0.09, 0.07, 0.04, 0.4
+            Ellipse:
+                pos: self.center_x - 100, self.center_y - 40
+                size: 200, 260
+            # 龙鳞暗纹 — 极淡菱形格
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.03
+        canvas.after:
+            # === 左上祥云纹 ===
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.06
+            Ellipse:
+                pos: self.x + 4, self.y + self.height - 52
+                size: 38, 28
+            Ellipse:
+                pos: self.x + 16, self.y + self.height - 62
+                size: 24, 18
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.04
+            Ellipse:
+                pos: self.x, self.y + self.height - 42
+                size: 52, 20
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.07
+            Line:
+                points:
+                    self.x + 22, self.y + self.height - 38, self.x + 12, self.y + self.height - 24, self.x - 2, self.y + self.height - 18
+                width: 1.2
+            # === 右上祥云纹 ===
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.06
+            Ellipse:
+                pos: self.right - 42, self.y + self.height - 52
+                size: 38, 28
+            Ellipse:
+                pos: self.right - 40, self.y + self.height - 62
+                size: 24, 18
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.04
+            Ellipse:
+                pos: self.right - 52, self.y + self.height - 42
+                size: 52, 20
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.07
+            Line:
+                points:
+                    self.right - 22, self.y + self.height - 38, self.right - 12, self.y + self.height - 24, self.right + 2, self.y + self.height - 18
+                width: 1.2
+            # === 下方凤羽弧线 ===
+            Color:
+                rgba: 0.75, 0.18, 0.12, 0.03
+            Line:
+                points:
+                    self.x - 10, self.y + 60, self.center_x - 50, self.y + 40, self.center_x, self.y + 45, self.center_x + 50, self.y + 40, self.right + 10, self.y + 60
+                width: 35
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.04
+            Line:
+                points:
+                    self.x - 5, self.y + 45, self.center_x, self.y + 25, self.right + 5, self.y + 45
+                width: 20
 
         # ---- 顶部装饰 ----
         DecorTop:
@@ -195,6 +252,17 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+            # 龟甲轮廓暗示
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.04
+            Ellipse:
+                pos: self.center_x - 70, self.center_y - 50
+                size: 140, 180
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.03
+            Line:
+                ellipse: self.center_x - 70, self.center_y - 50, 140, 180
+                width: 1
         canvas:
             # 火焰光晕
             Color:
@@ -207,6 +275,33 @@
             Ellipse:
                 pos: self.center_x - 130, self.y + 10
                 size: 260, 60
+            # 火星粒子
+            Color:
+                rgba: 0.95, 0.60, 0.15, 0.45
+            Ellipse:
+                pos: self.center_x - 70, self.y + 50
+                size: 3, 3
+            Ellipse:
+                pos: self.center_x + 35, self.y + 38
+                size: 2.5, 2.5
+            Ellipse:
+                pos: self.center_x - 25, self.y + 58
+                size: 3, 3
+            # 两侧云纹
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.05
+            Ellipse:
+                pos: self.x + 8, self.y + self.height - 60
+                size: 32, 22
+            Ellipse:
+                pos: self.x + 18, self.y + self.height - 68
+                size: 18, 14
+            Ellipse:
+                pos: self.right - 40, self.y + self.height - 60
+                size: 32, 22
+            Ellipse:
+                pos: self.right - 36, self.y + self.height - 68
+                size: 18, 14
 
         Widget:
             size_hint_y: 0.2
@@ -245,6 +340,23 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+        canvas.after:
+            # 两侧云纹
+            Color:
+                rgba: 0.82, 0.63, 0.25, 0.04
+            Ellipse:
+                pos: self.x + 4, self.y + self.height - 50
+                size: 28, 20
+            Ellipse:
+                pos: self.right - 32, self.y + self.height - 50
+                size: 28, 20
+            # 底部凤羽弧线
+            Color:
+                rgba: 0.75, 0.18, 0.12, 0.02
+            Line:
+                points:
+                    self.x - 5, self.y + 40, self.center_x, self.y + 20, self.right + 5, self.y + 40
+                width: 25
 
         # ---- 顶部栏 ----
         BoxLayout:
