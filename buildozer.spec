@@ -13,7 +13,7 @@ orientation = portrait
 fullscreen = 0
 window.clearcolor = 0.07,0.05,0.02,1
 
-android.permissions = (none)
+android.permissions =
 android.api = 33
 android.minapi = 26
 android.ndk = 25b
