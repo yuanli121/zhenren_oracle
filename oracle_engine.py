@@ -491,6 +491,32 @@ class OracleEngine:
             if "auspice" not in cols:
                 conn.execute("ALTER TABLE history ADD COLUMN auspice TEXT NOT NULL DEFAULT '无咎'")
 
+    def _extract_concern(self, question: str) -> str:
+        """从问题中提取核心关切，用于个性化前缀"""
+        cleaned = question.strip().rstrip('?？!！。.,，')
+        for p in ['吗', '呢', '啊', '吧', '呀', '哦', '嘛', '呗', '能不能', '会不会', '可不可以']:
+            cleaned = cleaned.replace(p, '')
+        cleaned = cleaned.strip()
+        if len(cleaned) > 16:
+            cleaned = cleaned[:16] + '…'
+        return cleaned
+
+    def _personalize(self, question: str, auspice: str, explanation: str) -> str:
+        """在解释前加入呼应具体问题的个性化导语"""
+        concern = self._extract_concern(question)
+        if not concern:
+            return explanation
+        lead_ins = {
+            "大吉": f"「{concern}」——天地以极吉之兆回应汝问：",
+            "吉": f"「{concern}」——龟兆光明，天地答曰：",
+            "贞吉": f"「{concern}」——兆纹昭然，其意曰：",
+            "无咎": f"「{concern}」——天地沉吟片刻，答曰：",
+            "悔吝": f"「{concern}」——龟兆微蹙，天地劝曰：",
+            "厉": f"「{concern}」——此问触动天机，龟兆示警：",
+        }
+        prefix = lead_ins.get(auspice, f"「{concern}」——天地答曰：")
+        return prefix + explanation
+
     def divine(self, question: str) -> dict:
         """执行一次占卜，六级吉凶加权随机"""
         category = classify_question(question)
@@ -502,6 +528,9 @@ class OracleEngine:
         # 取最高吉凶等级
         level_order = {name: i for i, name in enumerate(AUSPICE_NAMES)}
         best_level = max([lev_crack, lev_oracle, lev_explain], key=lambda t: level_order[t])
+
+        # 个性化解释：呼应具体问题
+        explanation = self._personalize(question, best_level, explanation)
 
         result = {
             "crack_pattern": crack,
