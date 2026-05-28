@@ -1,7 +1,8 @@
 #:kivy 2.3
 #:import PRICE oracle_engine.PRICE
+#:import Video kivy.uix.video.Video
 # ============================================================
-#  贞人占卜 — 商周青铜风 UI 设计
+#  爻一摇 — 商周青铜风 · 视频占卜动画
 #  配色：玄黑底 / 古铜金 / 朱砂红 / 宣纸白 / 青铜绿
 # ============================================================
 
@@ -140,7 +141,7 @@
                     pos: self.x + 20, self.y
                     size: self.width - 40, self.height
             Label:
-                text: "贞 人 占 卜"
+                text: "爻    一    摇"
                 font_size: "40sp"
                 bold: True
                 color: 0.84, 0.67, 0.30, 1     # 古铜金
@@ -244,91 +245,18 @@
 
 <CeremonyScreen>:
     name: "ceremony"
-    BoxLayout:
-        orientation: "vertical"
-        spacing: 20
+    Video:
+        id: ceremony_video
+        state: "stop"
+        options: "eos=stop"
+        allow_stretch: True
+        volume: 0
         canvas.before:
             Color:
                 rgba: 0.06, 0.04, 0.02, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
-            # 龟甲轮廓暗示
-            Color:
-                rgba: 0.82, 0.63, 0.25, 0.04
-            Ellipse:
-                pos: self.center_x - 70, self.center_y - 50
-                size: 140, 180
-            Color:
-                rgba: 0.82, 0.63, 0.25, 0.03
-            Line:
-                ellipse: self.center_x - 70, self.center_y - 50, 140, 180
-                width: 1
-        canvas:
-            # 火焰光晕
-            Color:
-                rgba: 0.95, 0.42, 0.08, 0.15
-            Ellipse:
-                pos: self.center_x - 100, self.y + 20
-                size: 200, 80
-            Color:
-                rgba: 0.95, 0.55, 0.12, 0.09
-            Ellipse:
-                pos: self.center_x - 130, self.y + 10
-                size: 260, 60
-            # 火星粒子
-            Color:
-                rgba: 0.95, 0.60, 0.15, 0.45
-            Ellipse:
-                pos: self.center_x - 70, self.y + 50
-                size: 3, 3
-            Ellipse:
-                pos: self.center_x + 35, self.y + 38
-                size: 2.5, 2.5
-            Ellipse:
-                pos: self.center_x - 25, self.y + 58
-                size: 3, 3
-            # 两侧云纹
-            Color:
-                rgba: 0.82, 0.63, 0.25, 0.05
-            Ellipse:
-                pos: self.x + 8, self.y + self.height - 60
-                size: 32, 22
-            Ellipse:
-                pos: self.x + 18, self.y + self.height - 68
-                size: 18, 14
-            Ellipse:
-                pos: self.right - 40, self.y + self.height - 60
-                size: 32, 22
-            Ellipse:
-                pos: self.right - 36, self.y + self.height - 68
-                size: 18, 14
-
-        Widget:
-            size_hint_y: 0.2
-
-        Label:
-            text: "灼 兆 中"
-            font_size: "36sp"
-            bold: True
-            color: 0.84, 0.67, 0.30, 1
-            size_hint_y: None
-            height: 60
-        Label:
-            text: "烈火焚龟 · 神灵示兆"
-            font_size: "14sp"
-            color: 0.75, 0.18, 0.12, 1
-            size_hint_y: None
-            height: 24
-        Label:
-            text: "天地正在聆听你的祈问..."
-            font_size: "13sp"
-            color: 0.5, 0.45, 0.38, 1
-            size_hint_y: None
-            height: 24
-
-        Widget:
-            size_hint_y: 1
 
 
 <ResultScreen>:

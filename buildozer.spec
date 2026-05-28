@@ -1,10 +1,10 @@
 [app]
 
-title = 贞人占卜
-package.name = zhenren_oracle
-package.domain = com.zhenren
+title = 爻一摇
+package.name = yaoyiyao
+package.domain = com.yaoyiyao
 source.dir = .
-source.include_exts = py,kv,png,jpg,ttf,db
+source.include_exts = py,kv,png,jpg,ttf,db,mp4
 version = 1.0.0
 
 requirements = python3,kivy==2.3.1
