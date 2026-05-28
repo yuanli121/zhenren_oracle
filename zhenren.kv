@@ -49,21 +49,6 @@
 
 
 
-<SplashScreen>:
-    Video:
-        id: splash_video
-        state: "stop"
-        options: "eos=stop"
-        allow_stretch: True
-        volume: 0
-        canvas.before:
-            Color:
-                rgba: 0.06, 0.04, 0.02, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
-
-
 <HomeScreen>:
     name: "home"
     BoxLayout:
